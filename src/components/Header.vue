@@ -16,15 +16,15 @@
 
 <style lang="scss" scoped>
   header {
-    background-color: var(--color-primary);
     height: var(--size-16);
     display: flex;
+    font-size: var(--scale-2);
     align-items: center;
   }
 
   h3 {
     font-size: var(--scale-4);
-    color: var(--color-white);
+    color: var(--color-primary);
   }
 
   nav {
@@ -45,13 +45,13 @@
   }
 
   a {
-    color: var(--color-white);
+    color: var(--color-primary);
     text-decoration: none;
     cursor: pointer;
 
     &:hover {
       text-decoration: underline;
-      color: var(--color-secondary);
+      filter: brightness(0.8);
     }
   }
 </style>

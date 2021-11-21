@@ -1,6 +1,6 @@
 :root {
   --color-text: #2c3e50;
-  --color-primary: #3a6697;
+  --color-primary: #0097a7;
   --color-secondary: #48ffd1;
   --color-warn: #d36363;
   --color-white: #fff;
@@ -15,4 +15,5 @@
   --moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
   color: var(--color-text);
+  accent-color: var(--color-primary);
 }

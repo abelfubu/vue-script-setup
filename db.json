@@ -12,7 +12,7 @@
     },
     {
       "text": "hello there",
-      "done": true,
+      "done": false,
       "id": 6
     }
   ]
