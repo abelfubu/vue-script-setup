@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { logTitleError, logTitleSuccess, prettyPrint } from '../utils/logger';
 
 const instance = axios.create({
   baseURL: 'http://localhost:3004',
@@ -7,32 +8,35 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.request.use(
-  (config) => {
-    console.log(`%c⚠ [${config.url}]`, 'color: orange; font-size: 18px');
-    if (config?.headers) {
-      config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+function onFulfilledRequest(config: AxiosRequestConfig) {
+  logTitleSuccess(config.url);
+  logTitleSuccess(config.method);
 
-instance.interceptors.response.use(
-  (response) => {
-    console.log(`%c⚠ [${response.status}]`, 'color: green; font-size: 18px');
-    console.info(JSON.stringify(response.data, null, 2));
-    return response;
-  },
-  (error) => {
-    if (error.response.status === 401) {
-      // localStorage.removeItem('token');
-      // router.push('/login');
-    }
-    return Promise.reject(error);
-  },
-);
+  if (!config?.headers) {
+    return config;
+  }
+
+  config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+  return config;
+}
+
+function onFulfilledResponse(response: AxiosResponse) {
+  logTitleSuccess(response.status);
+  prettyPrint(response.data);
+  return response;
+}
+
+function onRejectedRequest(error: any) {
+  logTitleError(error.message);
+  return Promise.reject(error);
+}
+
+function onRejectedResponse(error: any) {
+  logTitleError(error.config.url);
+  return Promise.reject(error);
+}
+
+instance.interceptors.request.use(onFulfilledRequest, onRejectedRequest);
+instance.interceptors.response.use(onFulfilledResponse, onRejectedResponse);
 
 export default instance;

@@ -1,79 +1,58 @@
 import { Todo } from '@models/todo';
-import { ActionTree, MutationTree } from 'vuex';
+import { AppState } from '@store/store';
+import { ActionTree, MutationTree, Store } from 'vuex';
 import axios from '../../api/axios';
+import { Todos } from './todos-model';
 
 export interface TodosState {
   todos: Todo[];
 }
 
 const state: TodosState = {
-  todos: [
-    {
-      id: 1,
-      text: 'Learn Vue',
-      done: false,
-    },
-    {
-      id: 2,
-      text: 'Learn React',
-      done: false,
-    },
-    {
-      id: 3,
-      text: 'Learn Angular',
-      done: false,
-    },
-  ],
+  todos: [],
 };
+
 const mutations: MutationTree<TodosState> = {
-  setTodos(state, todos: Todo[]) {
+  [Todos.setTodos](state, todos: Todo[]) {
     state.todos = todos;
   },
-  addTodo(state, todo: Todo) {
+  [Todos.addTodo](state, todo: Todo) {
     state.todos.push(todo);
   },
-  removeTodo(state, todo: Todo) {
+  [Todos.removeTodo](state, todo: Todo) {
     state.todos.splice(state.todos.indexOf(todo), 1);
   },
-  toggleDone(state, todo: Todo) {
+  [Todos.toggleTodo](state, todo: Todo) {
     const foundTodo = state.todos.find((t) => t.id === todo.id)!;
     foundTodo.done = !foundTodo.done;
   },
 };
 
 const actions: ActionTree<TodosState, TodosState> = {
-  async getTodos({ commit }) {
-    const response = await axios.get('/todos');
-    commit('setTodos', response.data);
+  async [Todos.setTodos]({ commit }) {
+    const response = await axios.get(Todos.path);
+    commit(Todos.setTodos, response.data);
   },
-  async addTodo({ commit }, todo: Todo) {
-    const response = await fetch('http://localhost:3004/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(todo),
-    });
-    const newTodo = await response.json();
-    commit('addTodo', newTodo);
+  async [Todos.addTodo]({ commit }, todo: Todo) {
+    const response = await axios.post(Todos.path, todo);
+    commit(Todos.addTodo, response.data);
   },
-  async removeTodo({ commit }, todo: Todo) {
-    await fetch(`http://localhost:3004/todos/${todo.id}`, {
-      method: 'DELETE',
-    });
-    commit('removeTodo', todo);
+  async [Todos.removeTodo]({ commit }, todo: Todo) {
+    await axios.delete(`/${Todos.path}/${todo.id}`);
+    commit(Todos.removeTodo, todo);
   },
-  async toggleDone({ commit }, todo: Todo) {
-    await fetch(`http://localhost:3004/todos/${todo.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ done: !todo.done }),
-    });
-    commit('toggleDone', todo);
+  async [Todos.toggleTodo]({ commit }, todo: Todo) {
+    await axios.patch(`/${Todos.path}/${todo.id}`, { done: !todo.done });
+    commit(Todos.toggleTodo, todo);
   },
 };
+
+export const mapTodosActions = (store: Store<AppState>) => ({
+  getTodos: () => store.dispatch(`${Todos.path}/${Todos.setTodos}`),
+  addTodo: (todo: Omit<Todo, 'id'>) => store.dispatch(`${Todos.path}/${Todos.addTodo}`, todo),
+  removeTodo: (todo: Todo) => store.dispatch(`${Todos.path}/${Todos.removeTodo}`, todo),
+  toggleDone: (todo: Todo) => store.dispatch(`${Todos.path}/${Todos.toggleTodo}`, todo),
+});
 
 export const todosStore = {
   namespaced: true,

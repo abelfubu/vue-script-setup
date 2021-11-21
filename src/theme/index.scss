@@ -1,0 +1,18 @@
+:root {
+  --color-text: #2c3e50;
+  --color-primary: #3a6697;
+  --color-secondary: #48ffd1;
+  --color-warn: #d36363;
+  --color-white: #fff;
+}
+
+* {
+  font-family: system-ui;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  --webkit-font-smoothing: antialiased;
+  --moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  color: var(--color-text);
+}

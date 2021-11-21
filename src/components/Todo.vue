@@ -1,54 +1,22 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue';
-  import { key } from '@store/store';
-  import { useStore } from 'vuex';
+  import { Todo } from '@models/todo';
+  import { mapTodosActions } from '@store/modules/todos';
+  import { useTodoStore } from '@store/store';
 
-  const store = useStore(key);
+  const store = useTodoStore();
+  const { removeTodo, toggleDone } = mapTodosActions(store);
 
-  onMounted(() => {
-    store.dispatch('todos/getTodos');
-  });
-
-  function addTodo(event: KeyboardEvent) {
-    const input = event.target as HTMLInputElement;
-    const text = input.value;
-    if (!text) return;
-    store.dispatch('todos/addTodo', { text, done: false });
-    input.select();
-  }
+  defineProps<{ todo: Todo }>();
 </script>
 
 <template>
-  <h2 v-highlight.red>Todo list</h2>
-  <input type="text" @keyup.enter="addTodo" />
-  <ul>
-    <li
-      v-for="todo in store.state.todos.todos"
-      @click="store.dispatch('todos/toggleDone', todo)"
-      :key="todo.text"
-    >
-      <span v-dynamic-class.line-through="todo.done">{{ todo.text }}</span>
-      <button @click.stop="store.dispatch('todos/removeTodo', todo)">🗑️</button>
-    </li>
-  </ul>
+  <li @click="toggleDone(todo)">
+    <span v-dynamic-class.line-through="todo.done">{{ todo.text }}</span>
+    <button @click.stop="removeTodo(todo)">🗑️</button>
+  </li>
 </template>
 
 <style lang="scss">
-  input {
-    font-size: 1.2em;
-    padding: 5px;
-    border: 2px solid #ccc;
-    border-radius: 0.25rem;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    max-width: 25rem;
-    margin: auto;
-    padding-top: 4rem;
-  }
-
   li {
     max-width: 25rem;
     display: flex;

@@ -1,3 +1,6 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cssvar.files": ["node_modules/pollen-css/pollen.css", "src/theme/index.scss"],
+  "cssvar.disableSort": true,
+  "cssvar.extensions": ["scss", "html", "vue"]
 }

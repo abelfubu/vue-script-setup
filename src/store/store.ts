@@ -2,7 +2,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store, useStore } from 'vuex';
 import { TodosState, todosStore } from './modules/todos';
 
-interface AppState {
+export interface AppState {
   todos: TodosState;
 }
 

@@ -6,19 +6,14 @@
   },
   "todos": [
     {
-      "text": "Hello there",
+      "text": "Make it work",
       "done": false,
-      "id": 2
+      "id": 5
     },
     {
-      "text": "id where",
-      "done": false,
-      "id": 3
-    },
-    {
-      "text": "Buy chocolate",
-      "done": false,
-      "id": 4
+      "text": "hello there",
+      "done": true,
+      "id": 6
     }
   ]
 }
