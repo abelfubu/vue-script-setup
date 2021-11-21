@@ -1,0 +1,24 @@
+{
+  "login": {
+    "username": "abelfubu",
+    "id": "1234",
+    "token": "abcdefg"
+  },
+  "todos": [
+    {
+      "text": "Hello there",
+      "done": false,
+      "id": 2
+    },
+    {
+      "text": "id where",
+      "done": false,
+      "id": 3
+    },
+    {
+      "text": "Buy chocolate",
+      "done": false,
+      "id": 4
+    }
+  ]
+}
